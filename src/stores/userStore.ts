@@ -7,6 +7,7 @@ export const useAuthenticationStore = defineStore('user', {
   }),
   getters: {
     getUserName: (state) => state.email.slice(0, state.email.indexOf('@') - 1),
+    getIsLogged: (state) => state.isLogged,
   },
   actions: {
     async login(email: string, pass: string): Promise<boolean> {

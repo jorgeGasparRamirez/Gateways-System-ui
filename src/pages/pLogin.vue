@@ -8,7 +8,7 @@
       label="Email"
       :error="!!errors.email"
     >
-      <template v-slot:error>
+      <template #error>
         {{ errors.email }}
       </template>
     </q-input>
@@ -22,25 +22,24 @@
       label="Contrasena"
       :error="!!errors.password"
     >
-      <template v-if="!errors.password" v-slot:append>
+      <template v-if="!errors.password" #append>
         <q-icon
           :name="indicators.hideText ? 'visibility_off' : 'visibility'"
           class="cursor-pointer, color-custom"
           @click="indicators.hideText = !indicators.hideText"
         />
       </template>
-      <template v-slot:error>
+      <template #error>
         {{ errors.password }}
       </template>
     </q-input>
   </div>
   <div>
     <q-btn
-      class="full-width, btn-custom"
+      class="btn-custom"
       type="submit"
       label="Acceder"
       :disable="!meta.valid"
-      :loading="indicators.isLoading"
       @click="submit(email, password)"
     >
       <template v-slot:loading> <q-spinner-facebook /> </template
@@ -53,9 +52,14 @@ import { computed, reactive } from 'vue';
 import { string, object } from 'yup';
 import { useField, useForm } from 'vee-validate';
 import { useAuthenticationStore } from 'src/stores/userStore';
+import { notify } from 'src/plugins/notifications';
+import { useRouter, NavigationFailure } from 'vue-router';
+import { ROUTES } from 'src/router/address';
+import { Router } from 'express';
 
 const indicators = reactive({ hideText: true, isLoading: false });
 const userStore = useAuthenticationStore();
+const router = useRouter();
 
 const validationSchema = computed(() => {
   return object({
@@ -79,10 +83,19 @@ function submit(email: string, password: string) {
   try {
     userStore.login(email, password).then(() => {
       if (userStore.isLogged === true) {
-        console.log('Estoy dentro');
+        router
+          .push(ROUTES.main)
+          .then(() => {
+            notify.sucess('Operacion satifactoria');
+          })
+          .catch((error: NavigationFailure) => notify.failed(error.message));
+      } else {
+        notify.failed('Credenciales Incorrectas');
       }
       indicators.isLoading = !indicators.isLoading;
     });
-  } catch {}
+  } catch (error) {
+    notify.failed(<string>error);
+  }
 }
 </script>
