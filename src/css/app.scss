@@ -1,1 +1,26 @@
 // app global css in SCSS form
+.color-custom {
+  color: $button;
+}
+
+.btn-custom {
+  background-color: $button;
+  color: white;
+}
+//overwrite style
+.body {
+  font-family: 'Haas Grot Text R Web', 'Helvetica Neue', 'Helvetica', 'Arial',
+    'sans-serif';
+}
+.q-field__control {
+  color: $button;
+  background-color: $grey;
+}
+
+.q-field--outlined .q-field__control {
+  border-radius: 8px;
+}
+
+.q-field--outlined .q-field__control:before {
+  border: none;
+}
