@@ -18,7 +18,7 @@
       size="8px"
       class="btn-custom"
       @click="gatewayStore.saveParameters(false, ind, item.uid)"
-    />{{ ind }}
+    />
   </div>
 </template>
 <script setup lang="ts">

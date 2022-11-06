@@ -1,12 +1,10 @@
 <template>
   <div v-for="(item, index) in gatewayStore.getData" :key="item.id">
-    {{ index }}
     <base-card
       :item="item"
       :ind="index"
       @dropGateway="gatewayStore.saveParameters(true, item.id, -1)"
     />
-    <!-- @dropDevice="toggleVisibilityDevice(...$event)" -->
     <base-dialog
       text-body="'Are you sure you want to delete this gateway?'"
       :isVisible="gatewayStore.parameters.showDialogGateway"
@@ -20,7 +18,7 @@
       :isVisible="gatewayStore.parameters.showDialogDevice"
       color-icon="red"
       @cancel="gatewayStore.clearParameters(false)"
-      @action="gatewayStore.deleteDevice()"
+      @action="gatewayStore.deleteDevice"
     />
   </div>
 </template>
