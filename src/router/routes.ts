@@ -6,16 +6,17 @@ const routes: RouteRecordRaw[] = [
     path: ROUTES.login,
     meta: { requiresUnauth: true },
     component: () => import('layouts/LoginLayout.vue'),
-    children: [{ path: '', component: () => import('src/pages/pLogin.vue') }],
+    children: [{ path: '', component: () => import('pages/pLogin.vue') }],
   },
   {
-    path: ROUTES.main,
+    path: ROUTES.list,
     meta: { requiresAuth: true },
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: ROUTES.main,
-        component: () => import('src/components/gateways/cList.vue'),
+        name: 'List',
+        path: ROUTES.list,
+        component: () => import('src/pages/pDashboard.vue'),
       },
     ],
   },

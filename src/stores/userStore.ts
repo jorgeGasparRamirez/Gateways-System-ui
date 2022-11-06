@@ -18,7 +18,7 @@ export const useAuthenticationStore = defineStore('user', {
       return false;
     },
     logout() {
-      this.$reset;
+      localStorage.removeItem('user');
     },
   },
   persist: {

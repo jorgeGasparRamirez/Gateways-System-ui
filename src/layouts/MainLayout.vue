@@ -2,26 +2,13 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-toolbar-title> Gateways System </q-toolbar-title>
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <div>
+          <q-btn class="glossy" round icon="exit_to_app" @click="logout()" />
+        </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-      </q-list>
-    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -30,11 +17,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useAuthenticationStore } from 'src/stores/userStore';
+import { NavigationFailure, useRouter } from 'vue-router';
+import { ROUTES } from 'src/router/address';
+import { notify } from 'src/plugins/notifications';
 
-const leftDrawerOpen = ref(false);
+const userStore = useAuthenticationStore();
+const router = useRouter();
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+function logout() {
+  userStore.logout();
+  router
+    .replace(ROUTES.login)
+    .then((res) => res)
+    .catch((e) => notify.failed((e as NavigationFailure).message));
 }
 </script>

@@ -7,6 +7,22 @@
   background-color: $button;
   color: white;
 }
+
+.subtitle-custom {
+  font-weight: 100;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.card-custom {
+  border: 1px dashed $button;
+  border-radius: 4px 30px 4px;
+}
+
+.btn-position-drop {
+  top: -4px;
+  right: -6px;
+}
 //overwrite style
 .body {
   font-family: 'Haas Grot Text R Web', 'Helvetica Neue', 'Helvetica', 'Arial',
@@ -23,4 +39,8 @@
 
 .q-field--outlined .q-field__control:before {
   border: none;
+}
+
+.q-layout__section--marginal {
+  background-color: $button;
 }

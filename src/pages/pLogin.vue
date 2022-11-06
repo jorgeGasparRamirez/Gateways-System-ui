@@ -55,7 +55,6 @@ import { useAuthenticationStore } from 'src/stores/userStore';
 import { notify } from 'src/plugins/notifications';
 import { useRouter, NavigationFailure } from 'vue-router';
 import { ROUTES } from 'src/router/address';
-import { Router } from 'express';
 
 const indicators = reactive({ hideText: true, isLoading: false });
 const userStore = useAuthenticationStore();
@@ -84,7 +83,7 @@ function submit(email: string, password: string) {
     userStore.login(email, password).then(() => {
       if (userStore.isLogged === true) {
         router
-          .push(ROUTES.main)
+          .push(ROUTES.list)
           .then(() => {
             notify.sucess('Operacion satifactoria');
           })
