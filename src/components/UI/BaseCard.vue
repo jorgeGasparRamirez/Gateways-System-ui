@@ -1,7 +1,13 @@
 <template>
   <div class="card-custom q-my-lg q-mx-md relative-position">
     <div class="flex justify-center absolute btn-position-drop">
-      <q-btn icon="close" round size="8px" class="btn-custom" />
+      <q-btn
+        icon="close"
+        round
+        size="8px"
+        class="btn-custom"
+        @click="$emit('dropGateway')"
+      />
     </div>
     <div class="q-ma-md">
       <div class="row">
@@ -26,14 +32,22 @@
         :key="index"
         class="row q-my-sm"
       >
-        <device-card :item="pheripheral" />
+        <device-card :item="pheripheral" :ind="ind" />
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, toRefs } from 'vue';
 import { gateways } from 'components/models';
 import DeviceCard from 'components/UI/DeviceCard.vue';
-defineProps({ item: { type: Object as PropType<gateways>, required: true } });
+
+const props = defineProps({
+  item: { type: Object as PropType<gateways>, required: true },
+  ind: { type: Number, required: true },
+});
+
+defineEmits(['dropGateway']);
+
+const { item, ind } = toRefs(props);
 </script>

@@ -1,51 +1,33 @@
 <template>
-  <div v-for="item in data" :key="item.id">
-    <base-card :item="item" />
+  <div v-for="(item, index) in gatewayStore.getData" :key="item.id">
+    {{ index }}
+    <base-card
+      :item="item"
+      :ind="index"
+      @dropGateway="gatewayStore.saveParameters(true, item.id, -1)"
+    />
+    <!-- @dropDevice="toggleVisibilityDevice(...$event)" -->
+    <base-dialog
+      text-body="'Are you sure you want to delete this gateway?'"
+      :isVisible="gatewayStore.parameters.showDialogGateway"
+      color-icon="red"
+      @cancel="gatewayStore.clearParameters(true)"
+      @action="gatewayStore.deleteG(gatewayStore.parameters.idSelectedGateway)"
+    />
+
+    <base-dialog
+      text-body="Are you sure you want to delete this device?"
+      :isVisible="gatewayStore.parameters.showDialogDevice"
+      color-icon="red"
+      @cancel="gatewayStore.clearParameters(false)"
+      @action="gatewayStore.deleteDevice()"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { reactive } from 'vue';
 import BaseCard from 'components/UI/BaseCard.vue';
-import { gateways } from 'components/models';
+import BaseDialog from 'components/UI/BaseDialog.vue';
+import { useGatewaysStore } from 'src/stores/gatewaysStore';
 
-const data = reactive<gateways[]>([
-  {
-    id: '0909es2',
-    name: 'CPU',
-    ip: '123.34.54.67',
-    devices: [
-      {
-        uid: 789,
-        vendor: 'ET&T',
-        date: '2/3/2000',
-        status: 'Online',
-      },
-      {
-        uid: 759,
-        vendor: 'YT',
-        date: '5/3/2010',
-        status: 'Online',
-      },
-      {
-        uid: 709,
-        vendor: 'YrrT',
-        date: '12/3/2020',
-        status: 'Online',
-      },
-    ],
-  },
-  {
-    id: '0909ef2',
-    name: 'Modem',
-    ip: '122.22.54.67',
-    devices: [
-      {
-        uid: 799,
-        vendor: 'ET&T',
-        date: '4/3/2020',
-        status: 'Offline',
-      },
-    ],
-  },
-]);
+const gatewayStore = useGatewaysStore();
 </script>
