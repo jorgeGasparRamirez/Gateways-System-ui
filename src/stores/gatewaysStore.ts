@@ -60,6 +60,15 @@ export const useGatewaysStore = defineStore('gateways', {
     },
   },
   actions: {
+    add(gateway: gateways) {
+      try {
+        this.data.push(gateway);
+        notify.sucess('Successful operation');
+      } catch (error) {
+        notify.failed(<string>error);
+      }
+    },
+
     deleteG(id: string) {
       try {
         const index = this.data.findIndex((item) => item.id === id);

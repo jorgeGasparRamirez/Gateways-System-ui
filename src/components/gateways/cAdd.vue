@@ -26,7 +26,7 @@
         label="IP"
         mask="###.###.###.###"
         hint="Mask: ###.###.###.####"
-        :error="!!errors.name"
+        :error="!!errors.ip"
       >
         <template #error>
           {{ errors.ip }}
@@ -97,8 +97,8 @@
     <div class="row flex flex-center">
       <q-btn
         class="btn-custom"
-        type="submit"
         label="Add"
+        @click="submit()"
         :disable="!meta.valid"
       />
     </div>
@@ -109,11 +109,16 @@ import { computed } from 'vue';
 import { date } from 'quasar';
 import { string, number, object, boolean } from 'yup';
 import { useField, useForm } from 'vee-validate';
+import { useGatewaysStore } from 'src/stores/gatewaysStore';
+import { gateways } from 'components/models';
+import { useRouter, NavigationFailure } from 'vue-router';
+import { ROUTES } from 'src/router/address';
+import { notify } from 'src/plugins/notifications';
 
 const timeStamp = Date.now();
 const formattedString = date.formatDate(timeStamp, 'DD/MM/YYYY');
-
-console.log(formattedString);
+const router = useRouter();
+const gatewayStore = useGatewaysStore();
 
 const validationSchema = computed(() => {
   return object({
@@ -141,4 +146,29 @@ const { value: vendor } = useField<string>('vendor');
 const { value: status, setValue } = useField<boolean>('status');
 
 setValue(false);
+
+function submit() {
+  try {
+    const data: gateways = {
+      id: timeStamp.toString(),
+      name: name.value,
+      ip: ip.value,
+      devices: [
+        {
+          uid: parseInt(uid.value),
+          vendor: vendor.value,
+          date: formattedString,
+          status: status.value ? 'Online' : 'Offline',
+        },
+      ],
+    };
+    gatewayStore.add(data);
+    router
+      .push(ROUTES.list)
+      .then((res) => res)
+      .catch((error: NavigationFailure) => notify.failed(error.message));
+  } catch (error) {
+    notify.failed(<string>error);
+  }
+}
 </script>
