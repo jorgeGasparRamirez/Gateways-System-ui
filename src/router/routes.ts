@@ -18,6 +18,11 @@ const routes: RouteRecordRaw[] = [
         path: ROUTES.list,
         component: () => import('src/pages/pDashboard.vue'),
       },
+      {
+        name: 'Add',
+        path: ROUTES.add,
+        component: () => import('components/gateways/cAdd.vue'),
+      },
     ],
   },
 

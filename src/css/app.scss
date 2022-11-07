@@ -23,6 +23,13 @@
   top: -4px;
   right: -6px;
 }
+
+.title-position-custom {
+  left: -1px;
+  top: -30px;
+  z-index: 1;
+  background-color: white;
+}
 //overwrite style
 .body {
   font-family: 'Haas Grot Text R Web', 'Helvetica Neue', 'Helvetica', 'Arial',
@@ -43,4 +50,10 @@
 
 .q-layout__section--marginal {
   background-color: $button;
+}
+
+.q-btn--fab {
+  background-color: $button;
+  color: white;
+  border-radius: 18px;
 }
