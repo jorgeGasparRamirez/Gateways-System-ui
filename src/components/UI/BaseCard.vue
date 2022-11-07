@@ -21,6 +21,18 @@
     </div>
     <div class="q-ma-md">
       <q-separator />
+      <div class="q-ma-sm row items-center">
+        Device(s):
+        <q-btn
+          v-if="item.devices.length < 10"
+          flat
+          round
+          icon="add"
+          size="12px"
+          class="color-custom"
+          @click="toggleVisible"
+        />
+      </div>
       <div class="row">
         <div class="col-2 flex justify-center subtitle-custom">UID</div>
         <div class="col-3 flex justify-center subtitle-custom">Vendor</div>
@@ -36,11 +48,17 @@
       </div>
     </div>
   </div>
+  <add-device
+    :is-visible="isVisible"
+    :id-gateway="ind"
+    @hide="isVisible = false"
+  />
 </template>
 <script setup lang="ts">
-import { PropType, toRefs } from 'vue';
+import { PropType, toRefs, ref } from 'vue';
 import { gateways } from 'components/models';
 import DeviceCard from 'components/UI/DeviceCard.vue';
+import AddDevice from 'components/device/cAdd.vue';
 
 const props = defineProps({
   item: { type: Object as PropType<gateways>, required: true },
@@ -50,4 +68,6 @@ const props = defineProps({
 defineEmits(['dropGateway']);
 
 const { item, ind } = toRefs(props);
+const isVisible = ref(false);
+const toggleVisible = () => (isVisible.value = !isVisible.value);
 </script>

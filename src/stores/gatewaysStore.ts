@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { notify } from 'src/plugins/notifications';
-import { gateways } from 'src/components/models';
+import { device, gateways } from 'src/components/models';
 
 export const useGatewaysStore = defineStore('gateways', {
   state: () => ({
@@ -63,6 +63,15 @@ export const useGatewaysStore = defineStore('gateways', {
     add(gateway: gateways) {
       try {
         this.data.push(gateway);
+        notify.sucess('Successful operation');
+      } catch (error) {
+        notify.failed(<string>error);
+      }
+    },
+
+    addDevice(index: number, device: device) {
+      try {
+        this.data[index].devices?.push(device as never);
         notify.sucess('Successful operation');
       } catch (error) {
         notify.failed(<string>error);
