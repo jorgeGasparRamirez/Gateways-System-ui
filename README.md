@@ -1,6 +1,8 @@
 # Quasar App (managing-gateways-ui)
 
 Test JVLsoft-Getaways System
+user: root@gmail.com
+pass: PeaceAndLove2022
 
 ## Install the dependencies
 
