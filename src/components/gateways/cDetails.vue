@@ -1,5 +1,10 @@
 <template>
   <div class="card-custom q-my-lg q-mx-md relative-position">
+    <div
+      class="color-custom text-subtitle1 q-my-md q-pa-xm absolute title-position-custom"
+    >
+      Details
+    </div>
     <div class="q-ma-md">
       <div class="row">
         <div class="col-2"></div>

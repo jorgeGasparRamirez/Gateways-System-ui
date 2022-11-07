@@ -19,7 +19,7 @@
       v-model="password"
       name="password"
       :type="indicators.hideText ? 'password' : 'text'"
-      label="Contrasena"
+      label="Password"
       :error="!!errors.password"
     >
       <template v-if="!errors.password" #append>
@@ -38,7 +38,7 @@
     <q-btn
       class="btn-custom"
       type="submit"
-      label="Acceder"
+      label="login"
       :disable="!meta.valid"
       @click="submit(email, password)"
     >
@@ -62,12 +62,12 @@ const router = useRouter();
 
 const validationSchema = computed(() => {
   return object({
-    email: string().required('Requerido').email('Correo Invalido'),
+    email: string().required('Required').email('Wrong format'),
     password: string()
-      .required('Requerido')
+      .required('Required')
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/,
-        '8 dígitos,(una mayúscula)letras y números'
+        '8 digits,(one uppercase) letters and numbers'
       ),
   });
 });
@@ -85,11 +85,11 @@ function submit(email: string, password: string) {
         router
           .push(ROUTES.list)
           .then(() => {
-            notify.sucess('Operacion satifactoria');
+            notify.sucess('Successful operation');
           })
           .catch((error: NavigationFailure) => notify.failed(error.message));
       } else {
-        notify.failed('Credenciales Incorrectas');
+        notify.failed('Wrong credentials');
       }
       indicators.isLoading = !indicators.isLoading;
     });
