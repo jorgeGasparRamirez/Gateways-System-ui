@@ -23,6 +23,12 @@ const routes: RouteRecordRaw[] = [
         path: ROUTES.add,
         component: () => import('components/gateways/cAdd.vue'),
       },
+      {
+        name: 'Details',
+        path: ROUTES.details,
+        component: () => import('components/gateways/cDetails.vue'),
+        props: true,
+      },
     ],
   },
 

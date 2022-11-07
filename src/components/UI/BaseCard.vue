@@ -11,10 +11,20 @@
     </div>
     <div class="q-ma-md">
       <div class="row">
+        <div class="col-2">
+          <q-btn
+            icon="visibility"
+            :to="{ name: 'Details', params: { id: ind } }"
+            round
+            size="8px"
+            class="btn-custom"
+          />
+        </div>
         <div class="col-3 flex justify-center subtitle-custom">Name</div>
         <div class="col-3 flex justify-center subtitle-custom">IP</div>
       </div>
       <div class="row q-mb-sm">
+        <div class="col-2"></div>
         <div class="col-3 flex justify-center">{{ item.name }}</div>
         <div class="col-3 flex justify-center">{{ item.ip }}</div>
       </div>

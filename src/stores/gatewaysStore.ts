@@ -58,6 +58,9 @@ export const useGatewaysStore = defineStore('gateways', {
     getDevicesLength: (state) => {
       return (index: number) => state.data[index]?.devices?.length;
     },
+    getDetails: (state) => {
+      return (index: string) => state.data[parseInt(index)];
+    },
   },
   actions: {
     add(gateway: gateways) {
