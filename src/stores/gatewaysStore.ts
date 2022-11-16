@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { notify } from 'src/plugins/notifications';
-import { device, gateways } from 'src/components/models';
+import { device, addDevice, gateways, addGateway } from 'src/components/models';
 import { api } from 'boot/axios';
 
 export const useGatewaysStore = defineStore('gateways', {
@@ -18,7 +18,10 @@ export const useGatewaysStore = defineStore('gateways', {
     getData: (state) => state.data,
     getParameters: (state) => state.parameters,
     getDevicesLength: (state) => {
-      return (index: number) => state.data[index]?.devices?.length;
+      return (id: string) =>
+        state.data.find((item) => item.id === id)
+          ? state.data.find((item) => item.id === id)?.devices.length
+          : -1;
     },
     getDetails: (state) => {
       return (index: string) => state.data[parseInt(index)];
@@ -26,24 +29,52 @@ export const useGatewaysStore = defineStore('gateways', {
   },
   actions: {
     obtainDataFromBack() {
-      return api.get('/gateways').then((res) => this.data.push(...res.data));
+      return api.get('/gateways').then((res) => {
+        (res.data as gateways[]).forEach((item: gateways) =>
+          this.data.findIndex((it: gateways) => it.id === item.id) === -1
+            ? this.data.push(item)
+            : ''
+        );
+      });
     },
 
-    add(gateway: gateways) {
-      try {
-        this.data.push(gateway);
-        notify.sucess('Successful operation');
-      } catch (error) {
-        notify.failed(<string>error);
-      }
+    add(gateteway: addGateway): Promise<gateways> {
+      return api
+        .post('/gateways', {
+          name: gateteway.name,
+          ip: gateteway.ip,
+          vendor: gateteway.vendor,
+          date: gateteway.date,
+          status: gateteway.status,
+        })
+        .then((res) => <gateways>res.data);
     },
 
-    addDevice(index: number, device: device) {
-      try {
-        this.data[index].devices?.push(device as never);
-        notify.sucess('Successful operation');
-      } catch (error) {
-        notify.failed(<string>error);
+    getById(id: string): Promise<gateways> {
+      return api.get(`/gateways/${id}`).then((res) => res.data);
+    },
+
+    addDevice(device: addDevice): Promise<device> {
+      return api
+        .post('/device', {
+          vendor: device.vendor,
+          date: device.date,
+          status: device.status,
+          gatewayId: device.gatewayId,
+        })
+        .then((res) => res.data);
+    },
+
+    refreshDevices(
+      action: 'add' | 'delete',
+      idGateway: string,
+      device: device
+    ) {
+      const index = this.data.findIndex((i) => i.id === idGateway);
+      if (action === 'add') {
+        this.data[index].devices.push(device as never);
+      } else {
+        this.data[index].devices.splice(index, 1);
       }
     },
 

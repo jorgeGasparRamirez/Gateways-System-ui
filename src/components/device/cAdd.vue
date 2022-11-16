@@ -1,19 +1,6 @@
 <template>
   <q-dialog :model-value="isVisible" persistent>
     <div class="card-custom q-my-lg q-mx-md q-pa-md relative-position">
-      <div class="q-mb-sm q-mt-lg">
-        <q-input
-          outlined
-          v-model="uid"
-          name="uid"
-          label="UID"
-          :error="!!errors.uid"
-        >
-          <template #error>
-            {{ errors.uid }}
-          </template>
-        </q-input>
-      </div>
       <div class="q-mb-sm">
         <q-input
           outlined
@@ -49,15 +36,15 @@
 <script setup lang="ts">
 import { computed, toRefs } from 'vue';
 import { date } from 'quasar';
-import { string, number, object, boolean } from 'yup';
+import { string, object, boolean } from 'yup';
 import { useField, useForm } from 'vee-validate';
-import { device } from 'components/models';
+import { addDevice } from 'components/models';
 import { notify } from 'src/plugins/notifications';
 import { useGatewaysStore } from 'src/stores/gatewaysStore';
 
 const props = defineProps({
   isVisible: { type: Boolean, default: () => false },
-  idGateway: { type: Number, required: true },
+  idGateway: { type: String, required: true },
 });
 
 const emit = defineEmits(['hide']);
@@ -68,9 +55,6 @@ const gatewayStore = useGatewaysStore();
 
 const validationSchema = computed(() => {
   return object({
-    uid: number()
-      .integer('Must be a number')
-      .typeError('Must be a number. Required'),
     vendor: string().required('Required'),
     status: boolean(),
   });
@@ -78,24 +62,28 @@ const validationSchema = computed(() => {
 
 const { errors, meta } = useForm({ validationSchema });
 
-const { value: uid, setValue: uidValue } = useField<string>('uid');
 const { value: vendor, setValue: vendorValue } = useField<string>('vendor');
 const { value: status, setValue: statusValue } = useField<boolean>('status');
 
 statusValue(false);
-
 function submit() {
   try {
-    const data: device = {
-      uid: parseInt(uid.value),
+    const device: addDevice = {
       vendor: vendor.value,
       date: formattedString,
       status: status.value ? 'Online' : 'Offline',
+      gatewayId: idGateway.value,
     };
-    gatewayStore.addDevice(idGateway.value, data);
-    vendorValue('');
-    uidValue('');
-    statusValue(false);
+    gatewayStore
+      .addDevice(device)
+      .then(() => {
+        gatewayStore.refreshDevices('add', idGateway.value, device);
+        notify.sucess('The operation was successfully');
+        vendorValue('');
+        statusValue(false);
+      })
+      .catch((error) => notify.failed(<string>error));
+
     emit('hide');
   } catch (error) {
     notify.failed(<string>error);

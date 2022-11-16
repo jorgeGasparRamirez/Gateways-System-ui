@@ -1,7 +1,4 @@
 <template>
-  <div class="col-2 flex justify-center">
-    {{ item.uid }}
-  </div>
   <div class="col-3 flex justify-center">
     {{ item.vendor }}
   </div>
@@ -17,7 +14,7 @@
       round
       size="8px"
       class="btn-custom"
-      @click="gatewayStore.saveParameters(false, ind, item.uid)"
+      @click="gatewayStore.saveParameters(false, id, item.uid)"
     />
   </div>
 </template>
@@ -28,14 +25,14 @@ import { useGatewaysStore } from 'src/stores/gatewaysStore';
 
 const props = defineProps({
   item: { type: Object as PropType<device>, required: true },
-  ind: { type: Number, required: true },
+  id: { type: String, required: true, default: () => -1 },
 });
 
 defineEmits(['dropDevice', 'drop']);
 
-const { item, ind } = toRefs(props);
+const { item, id } = toRefs(props);
 const gatewayStore = useGatewaysStore();
 const showDeleteButton = computed(
-  () => gatewayStore.getDevicesLength(ind.value) > 1
+  () => (gatewayStore.getDevicesLength(id.value) as number) > 1
 );
 </script>

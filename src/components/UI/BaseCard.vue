@@ -14,7 +14,7 @@
         <div class="col-2">
           <q-btn
             icon="visibility"
-            :to="{ name: 'Details', params: { id: ind } }"
+            :to="{ name: 'Details', params: { id: id } }"
             round
             size="8px"
             class="btn-custom"
@@ -44,7 +44,6 @@
         />
       </div>
       <div class="row">
-        <div class="col-2 flex justify-center subtitle-custom">UID</div>
         <div class="col-3 flex justify-center subtitle-custom">Vendor</div>
         <div class="col-2 flex justify-center subtitle-custom">Date</div>
         <div class="col-3 flex justify-center subtitle-custom">Status</div>
@@ -54,13 +53,13 @@
         :key="index"
         class="row q-my-sm"
       >
-        <device-card :item="pheripheral" :ind="ind" />
+        <device-card :item="pheripheral" :id="id" />
       </div>
     </div>
   </div>
   <add-device
     :is-visible="isVisible"
-    :id-gateway="ind"
+    :id-gateway="id"
     @hide="isVisible = false"
   />
 </template>
@@ -72,12 +71,12 @@ import AddDevice from 'components/device/cAdd.vue';
 
 const props = defineProps({
   item: { type: Object as PropType<gateways>, required: true },
-  ind: { type: Number, required: true },
+  id: { type: String, required: true },
 });
 
 defineEmits(['dropGateway']);
 
-const { item, ind } = toRefs(props);
+const { item, id } = toRefs(props);
 const isVisible = ref(false);
 const toggleVisible = () => (isVisible.value = !isVisible.value);
 </script>

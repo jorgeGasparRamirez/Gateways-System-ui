@@ -38,20 +38,8 @@
         </q-input>
       </div>
       <q-separator />
-      <div class="q-mb-sm q-mt-lg">
-        <q-input
-          outlined
-          v-model="uid"
-          name="uid"
-          label="UID"
-          :error="!!errors.uid"
-        >
-          <template #error>
-            {{ errors.uid }}
-          </template>
-        </q-input>
-      </div>
-      <div class="q-mb-sm">
+
+      <div class="q-mt-md q-mb-sm">
         <q-input
           outlined
           v-model="vendor"
@@ -81,10 +69,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { date } from 'quasar';
-import { string, number, object, boolean } from 'yup';
+import { string, object, boolean } from 'yup';
 import { useField, useForm } from 'vee-validate';
 import { useGatewaysStore } from 'src/stores/gatewaysStore';
-import { gateways } from 'components/models';
+import { addGateway } from 'components/models';
 import { useRouter, NavigationFailure } from 'vue-router';
 import { ROUTES } from 'src/router/address';
 import { notify } from 'src/plugins/notifications';
@@ -103,9 +91,6 @@ const validationSchema = computed(() => {
         /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
         'Wrong IP'
       ),
-    uid: number()
-      .integer('Must be a number')
-      .typeError('Must be a number. Required'),
     vendor: string().required('Required'),
     status: boolean(),
   });
@@ -115,7 +100,6 @@ const { errors, meta } = useForm({ validationSchema });
 
 const { value: name } = useField<string>('name');
 const { value: ip } = useField<string>('ip');
-const { value: uid } = useField<string>('uid');
 const { value: vendor } = useField<string>('vendor');
 const { value: status, setValue } = useField<boolean>('status');
 
@@ -123,24 +107,23 @@ setValue(false);
 
 function submit() {
   try {
-    const data: gateways = {
-      id: timeStamp.toString(),
+    const data: addGateway = {
       name: name.value,
       ip: ip.value,
-      devices: [
-        {
-          uid: parseInt(uid.value),
-          vendor: vendor.value,
-          date: formattedString,
-          status: status.value ? 'Online' : 'Offline',
-        },
-      ],
+      vendor: vendor.value,
+      date: formattedString,
+      status: status.value ? 'Online' : 'Offline',
     };
-    gatewayStore.add(data);
-    router
-      .push(ROUTES.list)
-      .then((res) => res)
-      .catch((error: NavigationFailure) => notify.failed(error.message));
+    gatewayStore
+      .add(data)
+      .then(() => {
+        notify.sucess('The operation was successfully');
+        router
+          .push(ROUTES.list)
+          .then((res) => res)
+          .catch((error: NavigationFailure) => notify.failed(error.message));
+      })
+      .catch((error) => notify.failed(<string>error));
   } catch (error) {
     notify.failed(<string>error);
   }

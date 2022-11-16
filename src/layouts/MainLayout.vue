@@ -37,7 +37,7 @@ const userStore = useAuthenticationStore();
 const router = useRouter();
 const route = useRoute();
 
-const showBtn = computed(() => route.path === '/list');
+const showBtn = computed(() => route.path === ROUTES.list);
 function logout() {
   userStore.logout();
   router

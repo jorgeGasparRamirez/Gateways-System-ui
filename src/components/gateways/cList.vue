@@ -2,8 +2,8 @@
   <div v-for="(item, index) in gatewayStore.getData" :key="item.id">
     <base-card
       :item="item"
-      :ind="index"
-      @dropGateway="gatewayStore.saveParameters(true, item.id, -1)"
+      :id="item.id"
+      @dropGateway="gatewayStore.saveParameters(true, index, -1)"
     />
     <base-dialog
       text-body="'Are you sure you want to delete this gateway?'"
