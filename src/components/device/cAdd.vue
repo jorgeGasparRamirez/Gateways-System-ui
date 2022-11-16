@@ -78,7 +78,6 @@ function submit() {
     gatewayStore
       .addDevice(device)
       .then((res) => {
-        console.log(res);
         gatewayStore.refreshDevices('add', idGateway.value, {
           uid: parseInt(res.device.uid),
           vendor: res.device.vendor,

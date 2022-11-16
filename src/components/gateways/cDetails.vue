@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, toRef } from 'vue';
+import { reactive, toRef, onMounted } from 'vue';
 import { gateways } from 'components/models';
 
 import { useGatewaysStore } from 'src/stores/gatewaysStore';
@@ -57,5 +57,8 @@ const props = defineProps({ id: { type: String, required: true } });
 const gatewayStore = useGatewaysStore();
 const ID = toRef(props, 'id');
 let info = reactive<gateways>(<gateways>{});
-Object.assign(info, gatewayStore.getDetails(ID.value));
+
+onMounted(() => {
+  gatewayStore.getById(ID.value).then((res) => Object.assign(info, res));
+});
 </script>

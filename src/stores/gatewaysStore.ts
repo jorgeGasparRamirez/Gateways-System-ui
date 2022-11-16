@@ -27,9 +27,6 @@ export const useGatewaysStore = defineStore('gateways', {
           ? state.data.find((item) => item.id === id)?.devices.length
           : -1;
     },
-    getDetails: (state) => {
-      return (index: string) => state.data[parseInt(index)];
-    },
   },
   actions: {
     obtainDataFromBack() {

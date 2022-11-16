@@ -1,5 +1,4 @@
 <template>
-  {{ gatewayStore.getParameters }}
   <div v-for="item in gatewayStore.getData" :key="item.id">
     <base-card
       :item="item"
@@ -52,7 +51,6 @@ function dropGateway() {
 }
 
 function dropDevice() {
-  console.log(gatewayStore.getParameters);
   try {
     gatewayStore
       .deleteDevice(
