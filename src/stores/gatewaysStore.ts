@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
-import { notify } from 'src/plugins/notifications';
-import { device, addDevice, gateways, addGateway } from 'src/components/models';
+import {
+  device,
+  addDevice,
+  gateways,
+  addGateway,
+  resCreateDevice,
+} from 'src/components/models';
 import { api } from 'boot/axios';
 
 export const useGatewaysStore = defineStore('gateways', {
@@ -8,7 +13,6 @@ export const useGatewaysStore = defineStore('gateways', {
     data: <gateways[]>[],
     parameters: {
       idSelectedGateway: '',
-      indexGateway: -1,
       idSelectedDevice: -1,
       showDialogGateway: false,
       showDialogDevice: false,
@@ -54,7 +58,7 @@ export const useGatewaysStore = defineStore('gateways', {
       return api.get(`/gateways/${id}`).then((res) => res.data);
     },
 
-    addDevice(device: addDevice): Promise<device> {
+    addDevice(device: addDevice): Promise<resCreateDevice> {
       return api
         .post('/device', {
           vendor: device.vendor,
@@ -62,43 +66,47 @@ export const useGatewaysStore = defineStore('gateways', {
           status: device.status,
           gatewayId: device.gatewayId,
         })
-        .then((res) => res.data);
+        .then((res) => <resCreateDevice>res.data);
+    },
+
+    refreshGateway(
+      action: 'add' | 'delete',
+      idGateway: string,
+      gateteway?: gateways
+    ) {
+      const index = this.data.findIndex((i) => i.id === idGateway);
+      if (action === 'add' && gateteway) {
+        this.data.push(gateteway);
+      } else {
+        this.data.splice(index, 1);
+      }
     },
 
     refreshDevices(
       action: 'add' | 'delete',
       idGateway: string,
-      device: device
+      device?: device
     ) {
+      console.log(device);
       const index = this.data.findIndex((i) => i.id === idGateway);
-      if (action === 'add') {
+      if (action === 'add' && device) {
         this.data[index].devices.push(device as never);
       } else {
-        this.data[index].devices.splice(index, 1);
+        const indexDevice = this.data[index].devices.findIndex(
+          (i) => i.uid === this.parameters.idSelectedDevice
+        );
+        this.data[index].devices.splice(indexDevice, 1);
       }
     },
 
-    deleteG(id: string) {
-      try {
-        const index = this.data.findIndex((item) => item.id === id);
-        this.data.splice(index, 1);
-        this.clearParameters(true);
-      } catch (error) {
-        notify.failed(<string>error);
-      }
+    deleteGateway(id: string) {
+      return api.delete(`/gateways/${id}`).then((res) => res.data);
     },
-    deleteDevice() {
-      try {
-        const indexDevice = this.data[
-          this.parameters.indexGateway
-        ].devices.findIndex(
-          (item) => item.uid === this.parameters.idSelectedDevice
-        );
-        this.data[this.parameters.indexGateway].devices.splice(indexDevice, 1);
-        this.clearParameters(false);
-      } catch (error) {
-        notify.failed(<string>error);
-      }
+
+    deleteDevice(idGateway: string, idDevice: string) {
+      return api
+        .delete(`/device/${idGateway}/${idDevice}`)
+        .then((res) => res.data);
     },
 
     clearParameters(aboutGateway: boolean) {
@@ -109,6 +117,7 @@ export const useGatewaysStore = defineStore('gateways', {
         this.parameters.idSelectedGateway = '';
         this.parameters.idSelectedDevice = -1;
         this.parameters.showDialogDevice = false;
+        console.log(this.parameters);
       }
     },
 
@@ -121,9 +130,11 @@ export const useGatewaysStore = defineStore('gateways', {
         this.parameters.idSelectedGateway = <string>id;
         this.parameters.showDialogGateway = true;
       } else {
-        this.parameters.indexGateway = <number>id;
+        console.log('entro aqui');
+        this.parameters.idSelectedGateway = id.toString();
         this.parameters.idSelectedDevice = idDevice;
         this.parameters.showDialogDevice = true;
+        console.log(this.parameters);
       }
     },
   },

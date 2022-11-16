@@ -27,3 +27,15 @@ export interface addDevice {
   status: 'Online' | 'Offline';
   gatewayId: string;
 }
+
+export interface resCreateDevice {
+  name: string;
+  ip: string;
+  device: {
+    uid: string;
+    vendor: string;
+    date: string;
+    status: 'Online' | 'Offline';
+    gatewayId: string;
+  };
+}

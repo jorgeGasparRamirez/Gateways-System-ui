@@ -66,6 +66,7 @@ const { value: vendor, setValue: vendorValue } = useField<string>('vendor');
 const { value: status, setValue: statusValue } = useField<boolean>('status');
 
 statusValue(false);
+
 function submit() {
   try {
     const device: addDevice = {
@@ -76,8 +77,15 @@ function submit() {
     };
     gatewayStore
       .addDevice(device)
-      .then(() => {
-        gatewayStore.refreshDevices('add', idGateway.value, device);
+      .then((res) => {
+        console.log(res);
+        gatewayStore.refreshDevices('add', idGateway.value, {
+          uid: parseInt(res.device.uid),
+          vendor: res.device.vendor,
+          date: res.device.date,
+          status: res.device.status,
+          gatewayId: res.device.gatewayId,
+        });
         notify.sucess('The operation was successfully');
         vendorValue('');
         statusValue(false);
