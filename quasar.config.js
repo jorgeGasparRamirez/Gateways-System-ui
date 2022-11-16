@@ -11,6 +11,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const { configure } = require('quasar/wrappers');
+const devServerProxyConfig = require('./src/proxy/proxys');
 
 module.exports = configure(function (ctx) {
   return {
@@ -76,13 +77,7 @@ module.exports = configure(function (ctx) {
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
-    devServer: {
-      server: {
-        type: 'http',
-      },
-      port: 8080,
-      open: true, // opens browser window automatically
-    },
+    devServer: devServerProxyConfig(),
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
     framework: {

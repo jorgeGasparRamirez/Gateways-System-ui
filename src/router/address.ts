@@ -1,6 +1,6 @@
 export enum ROUTES {
   login = '/',
-  list = '/list',
+  list = '/gateways',
   add = '/add',
   details = '/:id/gateway',
 }

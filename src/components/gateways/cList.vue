@@ -23,9 +23,14 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import BaseCard from 'components/UI/BaseCard.vue';
 import BaseDialog from 'components/UI/BaseDialog.vue';
 import { useGatewaysStore } from 'src/stores/gatewaysStore';
 
 const gatewayStore = useGatewaysStore();
+
+onMounted(() => {
+  gatewayStore.obtainDataFromBack();
+});
 </script>
