@@ -84,7 +84,6 @@ export const useGatewaysStore = defineStore('gateways', {
       idGateway: string,
       device?: device
     ) {
-      console.log(device);
       const index = this.data.findIndex((i) => i.id === idGateway);
       if (action === 'add' && device) {
         this.data[index].devices.push(device as never);
@@ -114,7 +113,6 @@ export const useGatewaysStore = defineStore('gateways', {
         this.parameters.idSelectedGateway = '';
         this.parameters.idSelectedDevice = -1;
         this.parameters.showDialogDevice = false;
-        console.log(this.parameters);
       }
     },
 
@@ -127,11 +125,9 @@ export const useGatewaysStore = defineStore('gateways', {
         this.parameters.idSelectedGateway = <string>id;
         this.parameters.showDialogGateway = true;
       } else {
-        console.log('entro aqui');
         this.parameters.idSelectedGateway = id.toString();
         this.parameters.idSelectedDevice = idDevice;
         this.parameters.showDialogDevice = true;
-        console.log(this.parameters);
       }
     },
   },

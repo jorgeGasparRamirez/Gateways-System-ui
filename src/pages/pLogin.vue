@@ -55,6 +55,8 @@ import { useAuthenticationStore } from 'src/stores/userStore';
 import { notify } from 'src/plugins/notifications';
 import { useRouter, NavigationFailure } from 'vue-router';
 import { ROUTES } from 'src/router/address';
+import { resSuccessUser, resFailedUser } from 'components/models';
+import { AxiosError } from 'axios';
 
 const indicators = reactive({ hideText: true, isLoading: false });
 const userStore = useAuthenticationStore();
@@ -80,19 +82,33 @@ const { value: password } = useField<string>('password');
 function submit(email: string, password: string) {
   indicators.isLoading = !indicators.isLoading;
   try {
-    userStore.login(email, password).then(() => {
-      if (userStore.isLogged === true) {
-        router
-          .push(ROUTES.list)
-          .then(() => {
-            notify.sucess('Successful operation');
-          })
-          .catch((error: NavigationFailure) => notify.failed(error.message));
-      } else {
-        notify.failed('Wrong credentials');
-      }
-      indicators.isLoading = !indicators.isLoading;
-    });
+    userStore
+      .login(email, password)
+      .then((res) => {
+        userStore.email = (res as resSuccessUser).email;
+        userStore.token = (res as resSuccessUser).token;
+        if (userStore.token !== '') {
+          userStore.isLogged = true;
+          notify.sucess('Welcome');
+          router
+            .push(ROUTES.list)
+            .then((res) => res)
+            .catch((error: NavigationFailure) => notify.failed(error.message));
+        }
+
+        indicators.isLoading = !indicators.isLoading;
+      })
+      .catch((error) => {
+        console.log(error);
+        const code = ((error as AxiosError)?.response?.data as resFailedUser)
+          .code;
+        if (code === '2021') {
+          notify.failed('Password wrong');
+        }
+        if (code === '2022') {
+          notify.failed('Email wrong');
+        }
+      });
   } catch (error) {
     notify.failed(<string>error);
   }

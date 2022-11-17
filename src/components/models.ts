@@ -39,3 +39,13 @@ export interface resCreateDevice {
     gatewayId: string;
   };
 }
+
+export interface resSuccessUser {
+  email: string;
+  token: string;
+}
+
+export interface resFailedUser {
+  code: string;
+  error: string;
+}

@@ -17,7 +17,6 @@
       @click="gatewayStore.saveParameters(false, id, item.uid)"
     />
   </div>
-  {{ id }} {{ item.uid }}
 </template>
 <script setup lang="ts">
 import { PropType, toRefs, computed } from 'vue';
