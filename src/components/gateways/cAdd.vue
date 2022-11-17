@@ -28,7 +28,6 @@
           v-model="ip"
           name="ip"
           label="IP"
-          mask="###.###.###.###"
           hint="Mask: ###.###.###.####"
           :error="!!errors.ip"
         >
